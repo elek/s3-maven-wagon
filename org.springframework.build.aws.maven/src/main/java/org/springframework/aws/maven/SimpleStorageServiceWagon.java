@@ -207,7 +207,7 @@ public class SimpleStorageServiceWagon extends AbstractWagon {
     private String getBaseDir(Repository source) {
         StringBuilder sb = new StringBuilder(source.getBasedir());
         sb.deleteCharAt(0);
-        if (sb.charAt(sb.length() - 1) != '/') {
+        if (sb.length()>0 && sb.charAt(sb.length() - 1) != '/') {
             sb.append('/');
         }
         return sb.toString();
