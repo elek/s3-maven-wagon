@@ -3,16 +3,35 @@
 		xmlns="http://maven.apache.org/POM/4.0.0"
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
     <modelVersion>4.0.0</modelVersion>
-    <groupId>net.anzix</groupId>
-    <artifactId>org.springframework.build.aws.maven</artifactId>
+    <groupId>net.anzix.aws</groupId>
+    <artifactId>s3-maven-wagon</artifactId>
     <packaging>jar</packaging>
     <name>Amazon S3/Google Developer Storage Maven Wagon Support</name>
-    <version>3.1.2-SNAPSHOT</version>
-    <description>Standard Maven wagon support for s3:// urls</description>
-    <url>http://www.springframework.org</url>
+    <version>3.2-SNAPSHOT</version>
+    <description>Standard Maven wagon support for s3:// urls (forked from the Spring version)</description>
+    <url>https://github.com/elek/s3-maven-wagon/admin</url>
     <inceptionYear>2007</inceptionYear>
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>5</version>
+    </parent>
+    <developers>
+        <developer>
+            <name>Spring team</name>
+            <organization>Spring source</organization>
+            <roles>
+                <role>author</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Elek, Márton</name>
+            <roles>
+                <role>small modifications on this fork</role>
+            </roles>
+        </developer>
+    </developers>
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -21,12 +40,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:git:git://git.springsource.org/spring-build/aws-maven.git</connection>
+        <connection>scm:git:git://git@github.com:elek/s3-maven-wagon.git</connection>
+        <url>scm:git:git://git@github.com:elek/s3-maven-wagon.git</url>
     </scm>
-    <organization>
-        <name>Spring Framework</name>
-        <url>http://www.springframework.org</url>
-    </organization>
     <build>
         <extensions>
             <extension>
@@ -44,8 +60,31 @@
                     <target>1.5</target>
                 </configuration>
             </plugin>
+            
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
     <dependencies>
         <dependency>
             <groupId>commons-httpclient</groupId>

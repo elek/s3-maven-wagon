@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.aws.maven;
+package net.anzix.aws.maven;
 
 import org.apache.maven.wagon.ResourceDoesNotExistException;
 import org.apache.maven.wagon.authentication.AuthenticationException;
 import org.apache.maven.wagon.authentication.AuthenticationInfo;
 import org.apache.maven.wagon.proxy.ProxyInfoProvider;
 import org.apache.maven.wagon.repository.Repository;
-import org.jets3t.service.S3ServiceException;
 import org.jets3t.service.acl.AccessControlList;
 import org.jets3t.service.impl.rest.httpclient.RestS3Service;
-import org.jets3t.service.model.S3Object;
 import org.jets3t.service.security.AWSCredentials;
 
 import java.io.File;
@@ -39,7 +37,7 @@ import org.jets3t.service.impl.rest.httpclient.GoogleStorageService;
 import org.jets3t.service.impl.rest.httpclient.RestStorageService;
 import org.jets3t.service.model.StorageObject;
 import org.jets3t.service.security.GSCredentials;
-import org.jets3t.service.security.ProviderCredentials;
+
 
 /**
  * An implementation of the Maven Wagon interface that allows you to access the
@@ -71,16 +69,20 @@ public class SimpleStorageServiceWagon extends AbstractWagon {
     protected void connectToRepository(Repository source, AuthenticationInfo authenticationInfo, ProxyInfoProvider proxyInfoProvider)
             throws AuthenticationException {
         try {
+            String provider = null;
             bucket = source.getUsername();
-            String provider = source.getHost();
-            if (provider == null) {
+            if (bucket == null || "".equals(bucket)) {
+                bucket = source.getHost();
                 provider = AMAZON_URL;
+            } else {
+                provider = source.getHost();
             }
+
             Credentials c = getCredentials(authenticationInfo);
             if (AMAZON_URL.equals(provider)) {
                 service = new RestS3Service(new AWSCredentials(c.access, c.secret));
             } else if (GOOGLE_URL.equals(provider)) {
-                service = new GoogleStorageService(new GSCredentials(c.access,c.secret));
+                service = new GoogleStorageService(new GSCredentials(c.access, c.secret));
             } else {
                 throw new IllegalArgumentException("Private Clouds not supported yet. Use s3://bucketname@" + AMAZON_URL + " or s3://bucketname@" + GOOGLE_URL);
             }
@@ -88,7 +90,6 @@ public class SimpleStorageServiceWagon extends AbstractWagon {
         } catch (ServiceException e) {
             throw new AuthenticationException("Cannot authenticate with current credentials", e);
         }
-        bucket = source.getUsername();
         basedir = getBaseDir(source);
     }
 
@@ -163,7 +164,7 @@ public class SimpleStorageServiceWagon extends AbstractWagon {
     protected void putResource(File source, String destination, TransferProgress progress) throws ServiceException,
             IOException {
         buildDestinationPath(getDestinationPath(destination));
-        S3Object object = new S3Object(basedir + destination);
+        StorageObject object = new StorageObject(basedir + destination);
         object.setAcl(AccessControlList.REST_CANNED_PUBLIC_READ);
         object.setDataInputFile(source);
         object.setContentLength(source.length());
@@ -190,7 +191,7 @@ public class SimpleStorageServiceWagon extends AbstractWagon {
     }
 
     private void buildDestinationPath(String destination) throws ServiceException {
-        S3Object object = new S3Object(basedir + destination + "/");
+        StorageObject object = new StorageObject(basedir + destination + "/");
         object.setAcl(AccessControlList.REST_CANNED_PUBLIC_READ);
         object.setContentLength(0);
         service.putObject(bucket, object);
@@ -207,7 +208,7 @@ public class SimpleStorageServiceWagon extends AbstractWagon {
     private String getBaseDir(Repository source) {
         StringBuilder sb = new StringBuilder(source.getBasedir());
         sb.deleteCharAt(0);
-        if (sb.length()>0 && sb.charAt(sb.length() - 1) != '/') {
+        if (sb.length() > 0 && sb.charAt(sb.length() - 1) != '/') {
             sb.append('/');
         }
         return sb.toString();
@@ -215,18 +216,19 @@ public class SimpleStorageServiceWagon extends AbstractWagon {
 
     private Credentials getCredentials(AuthenticationInfo authenticationInfo) throws AuthenticationException {
         if (authenticationInfo == null) {
-            String example = "<server>\n"+
-            "   <id>repo_key</id>\n"+
-            "   <username>access_key</username>\n"+
-            "   <password>secret_key</password>\n"+
-            "</server>";
-            throw new AuthenticationException("Missing authentication info. Add a \n"+example+"\n to your settings.xml!");
+            String example = "<server>\n"
+                    + "   <id>repo_key</id>\n"
+                    + "   <username>access_key</username>\n"
+                    + "   <password>secret_key</password>\n"
+                    + "</server>";
+            throw new AuthenticationException("Missing authentication info. Add a \n" + example + "\n to your settings.xml!");
         }
         String accessKey = authenticationInfo.getUserName();
         String secretKey = authenticationInfo.getPassphrase();
-        if ("".equals(secretKey)){
+        if ("".equals(secretKey)) {
             throw new AuthenticationException("With maven3 you should encrypt the secretKey (see http://maven.apache.org/guides/mini/guide-encryption.html) or use the password field.");
-        } if (secretKey == null) {
+        }
+        if (secretKey == null) {
             secretKey = authenticationInfo.getPassword();
         }
 
@@ -246,6 +248,5 @@ public class SimpleStorageServiceWagon extends AbstractWagon {
             this.access = access;
             this.secret = secret;
         }
-
     }
 }
