@@ -8,7 +8,7 @@
     <groupId>net.anzix</groupId>
     <artifactId>org.springframework.build.aws.maven</artifactId>
     <packaging>jar</packaging>
-    <name>AWS S3/Google DS Maven Wagon Support</name>
+    <name>Amazon S3/Google Developer Storage Maven Wagon Support</name>
     <version>3.1.2-SNAPSHOT</version>
     <description>Standard Maven wagon support for s3:// urls</description>
     <url>http://www.springframework.org</url>
