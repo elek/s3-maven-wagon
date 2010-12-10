@@ -42,6 +42,7 @@
     <scm>
         <connection>scm:git:git://git@github.com:elek/s3-maven-wagon.git</connection>
         <url>scm:git:git://git@github.com:elek/s3-maven-wagon.git</url>
+        <developerConnection>scm:git:git://git@github.com:elek/s3-maven-wagon.git</developerConnection>
     </scm>
     <build>
         <extensions>
