@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.aws.maven;
 
 import java.io.File;
@@ -30,32 +29,31 @@ import java.io.IOException;
  */
 class TransferProgressFileOutputStream extends FileOutputStream {
 
-	private TransferProgress progress;
+    private TransferProgress progress;
 
-	public TransferProgressFileOutputStream(File file, TransferProgress progress) throws FileNotFoundException {
-		super(file);
-		this.progress = progress;
-	}
+    public TransferProgressFileOutputStream(File file, TransferProgress progress) throws FileNotFoundException {
+        super(file);
+        this.progress = progress;
+    }
 
-	public void write(int b) throws IOException {
-		super.write(b);
-		progress.notify(new byte[] { (byte) b }, 1);
-	}
+    public void write(int b) throws IOException {
+        super.write(b);
+        progress.notify(new byte[]{(byte) b}, 1);
+    }
 
-	public void write(byte b[]) throws IOException {
-		super.write(b);
-		progress.notify(b, b.length);
-	}
+    public void write(byte b[]) throws IOException {
+        super.write(b);
+        progress.notify(b, b.length);
+    }
 
-	public void write(byte b[], int off, int len) throws IOException {
-		super.write(b, off, len);
-		if (off == 0) {
-			progress.notify(b, len);
-		}
-		else {
-			byte[] bytes = new byte[len];
-			System.arraycopy(b, off, bytes, 0, len);
-			progress.notify(bytes, len);
-		}
-	}
+    public void write(byte b[], int off, int len) throws IOException {
+        super.write(b, off, len);
+        if (off == 0) {
+            progress.notify(b, len);
+        } else {
+            byte[] bytes = new byte[len];
+            System.arraycopy(b, off, bytes, 0, len);
+            progress.notify(bytes, len);
+        }
+    }
 }

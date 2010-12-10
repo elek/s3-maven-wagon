@@ -4,11 +4,11 @@
 		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.springframework.build.aws</groupId>
+	<groupId>net.anzix</groupId>
 	<artifactId>org.springframework.build.aws.maven</artifactId>
 	<packaging>jar</packaging>
 	<name>Amazon Web Services Maven Wagon Support</name>
-	<version>3.1.0.RELEASE</version>
+	<version>3.1.2-SNAPSHOT</version>
 	<description>Standard Maven wagon support for s3:// urls</description>
 	<url>http://www.springframework.org</url>
 	<inceptionYear>2007</inceptionYear>

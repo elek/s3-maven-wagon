@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.aws.maven;
 
 import java.io.File;
@@ -30,35 +29,34 @@ import java.io.IOException;
  */
 public class TransferProgressFileInputStream extends FileInputStream {
 
-	private TransferProgress progress;
+    private TransferProgress progress;
 
-	public TransferProgressFileInputStream(File file, TransferProgress progress) throws FileNotFoundException {
-		super(file);
-		this.progress = progress;
-	}
+    public TransferProgressFileInputStream(File file, TransferProgress progress) throws FileNotFoundException {
+        super(file);
+        this.progress = progress;
+    }
 
-	public int read() throws IOException {
-		int b = super.read();
-		progress.notify(new byte[] { (byte) b }, 1);
-		return b;
-	}
+    public int read() throws IOException {
+        int b = super.read();
+        progress.notify(new byte[]{(byte) b}, 1);
+        return b;
+    }
 
-	public int read(byte b[]) throws IOException {
-		int count = super.read(b);
-		progress.notify(b, b.length);
-		return count;
-	}
+    public int read(byte b[]) throws IOException {
+        int count = super.read(b);
+        progress.notify(b, b.length);
+        return count;
+    }
 
-	public int read(byte b[], int off, int len) throws IOException {
-		int count = super.read(b, off, len);
-		if (off == 0) {
-			progress.notify(b, len);
-		}
-		else {
-			byte[] bytes = new byte[len];
-			System.arraycopy(b, off, bytes, 0, len);
-			progress.notify(bytes, len);
-		}
-		return count;
-	}
+    public int read(byte b[], int off, int len) throws IOException {
+        int count = super.read(b, off, len);
+        if (off == 0) {
+            progress.notify(b, len);
+        } else {
+            byte[] bytes = new byte[len];
+            System.arraycopy(b, off, bytes, 0, len);
+            progress.notify(bytes, len);
+        }
+        return count;
+    }
 }

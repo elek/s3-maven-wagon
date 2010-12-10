@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.aws.maven;
 
 import org.apache.maven.wagon.resource.Resource;
@@ -27,20 +26,19 @@ import org.apache.maven.wagon.resource.Resource;
  */
 class TransferProgress {
 
-	private Resource resource;
+    private Resource resource;
 
-	private int requestType;
+    private int requestType;
 
-	private TransferListenerSupport transferListeners;
+    private TransferListenerSupport transferListeners;
 
-	public TransferProgress(Resource resource, int requestType, TransferListenerSupport listeners) {
-		this.resource = resource;
-		this.requestType = requestType;
-		this.transferListeners = listeners;
-	}
+    public TransferProgress(Resource resource, int requestType, TransferListenerSupport listeners) {
+        this.resource = resource;
+        this.requestType = requestType;
+        this.transferListeners = listeners;
+    }
 
-	protected void notify(byte[] buffer, int length) {
-		transferListeners.fireTransferProgress(resource, requestType, buffer, length);
-	}
-
+    protected void notify(byte[] buffer, int length) {
+        transferListeners.fireTransferProgress(resource, requestType, buffer, length);
+    }
 }
