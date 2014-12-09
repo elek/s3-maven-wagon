@@ -7,7 +7,7 @@
     <name>Amazon S3/Google Developer Storage Maven Wagon Support</name>
     <version>3.3-SNAPSHOT</version>
     <description>Standard Maven wagon support for s3:// urls (forked from the Spring version)</description>
-    <url>https://github.com/elek/s3-maven-wagon/admin</url>
+    <url>https://github.com/elek/s3-maven-wagon</url>
     <inceptionYear>2007</inceptionYear>
     <parent>
         <groupId>org.sonatype.oss</groupId>
