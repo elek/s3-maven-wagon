@@ -69,11 +69,18 @@ public class SimpleStorageServiceWagon extends AbstractWagon {
     protected void connectToRepository(Repository source, AuthenticationInfo authenticationInfo, ProxyInfoProvider proxyInfoProvider)
             throws AuthenticationException {
         try {
-            String provider = null;
+            String provider;
+            String protocol = source.getProtocol();
             bucket = source.getUsername();
             if (bucket == null || "".equals(bucket)) {
                 bucket = source.getHost();
-                provider = AMAZON_URL;
+                if (source != null && protocol.equals("s3")) {
+                    provider = AMAZON_URL;
+                } else if (source != null && protocol.equals("gs")) {
+                    provider = GOOGLE_URL;
+                } else {
+                    throw new IllegalArgumentException("Internal error. The protocol should be s3: or gs:. Not " + protocol);
+                }
             } else {
                 provider = source.getHost();
             }
@@ -84,7 +91,7 @@ public class SimpleStorageServiceWagon extends AbstractWagon {
             } else if (GOOGLE_URL.equals(provider)) {
                 service = new GoogleStorageService(new GSCredentials(c.access, c.secret));
             } else {
-                throw new IllegalArgumentException("Private Clouds not supported yet. Use s3://bucketname@" + AMAZON_URL + " or s3://bucketname@" + GOOGLE_URL);
+                throw new IllegalArgumentException("Private Clouds not supported yet. Use s3://bucketname@" + AMAZON_URL + " or gs://bucketname@" + GOOGLE_URL);
             }
 
         } catch (ServiceException e) {
