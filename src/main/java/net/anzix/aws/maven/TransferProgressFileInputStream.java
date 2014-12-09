@@ -22,7 +22,7 @@ import java.io.IOException;
 
 /**
  * An extension to the {@link FileInputStream} that notifies a
- * @{link TransferProgress} object as it is being written to.
+ * {@link TransferProgress} object as it is being written to.
  * 
  * @author Ben Hale
  * @since 1.1
